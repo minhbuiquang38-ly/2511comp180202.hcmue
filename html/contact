@@ -1,0 +1,38 @@
+<!DOCTYPE html><html lang="vi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Liên hệ · Việt Hành</title><link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"><link rel="stylesheet" href="css/style.css"><link rel="stylesheet" href="css/responsive.css"></head><body><header id="site-header"></header><main>
+<header class="page-head"><div class="wrap"><h1>Liên hệ TITLEamp; Tài khoản</h1><p class="crumb"><a href="index.html">Trang chủ</a> / Liên hệ TITLEamp; Tài khoản</p></div></header>
+<section class="wrap sec two-col top">
+  <div><h2>Gửi góp ý</h2>
+  <form id="f-fb" class="card-form">
+    <label>Họ tên<input name="name" required></label>
+    <label>Email<input name="email" type="email" required></label>
+    <label>Chủ đề / Điểm đến<input name="topic"></label>
+    <label>Nội dung góp ý<textarea name="msg" rows="5" required></textarea></label>
+    <button class="btn btn-cta" type="submit">Gửi góp ý</button>
+    <p class="notice" id="fb-msg" hidden></p>
+  </form></div>
+
+  <div><h2>Tài khoản</h2>
+  <div class="card-form">
+    <div class="tabs"><button class="tab on" data-tab="t-reg">Đăng ký</button><button class="tab" data-tab="t-login">Đăng nhập</button><button class="tab" data-tab="t-pw">Đổi mật khẩu</button></div>
+    <form id="t-reg" class="pane on">
+      <label>Tên hiển thị<input name="display" required></label>
+      <label>Email / tên đăng nhập<input name="user" required></label>
+      <label>Mật khẩu<input name="pw" type="password" minlength="6" required></label>
+      <label>Xác nhận mật khẩu<input name="pw2" type="password" required></label>
+      <button class="btn btn-cta">Đăng ký</button>
+    </form>
+    <form id="t-login" class="pane">
+      <label>Email / tên đăng nhập<input name="user" required></label>
+      <label>Mật khẩu<input name="pw" type="password" required></label>
+      <button class="btn btn-cta">Đăng nhập</button>
+    </form>
+    <form id="t-pw" class="pane">
+      <label>Mật khẩu hiện tại<input name="old" type="password" required></label>
+      <label>Mật khẩu mới<input name="pw" type="password" minlength="6" required></label>
+      <label>Xác nhận mật khẩu mới<input name="pw2" type="password" required></label>
+      <button class="btn btn-cta">Cập nhật mật khẩu</button>
+    </form>
+    <p class="notice" id="acc-msg" hidden></p>
+  </div></div>
+</section>
+</main><footer id="site-footer"></footer><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script><script src="js/main.js"></script></body></html>
