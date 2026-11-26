@@ -1,0 +1,21 @@
+<!DOCTYPE html><html lang="vi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Giới thiệu · Việt Hành</title><link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"><link rel="stylesheet" href="css/style.css"><link rel="stylesheet" href="css/responsive.css"></head><body><header id="site-header"></header><main>
+<header class="page-head"><div class="wrap"><h1>Giới thiệu</h1><p class="crumb"><a href="index.html">Trang chủ</a> / Giới thiệu</p></div></header>
+<section class="wrap sec two-col">
+  <div class="ph-img"><img src="images/about.jpg" alt="" onerror="this.remove()"></div>
+  <div><h2>Câu chuyện của chúng tôi</h2>
+  <p>[Lý do chọn đề tài]</p><p>[Mục đích quảng bá điểm đến]</p><p>[Giá trị mang lại cho người xem]</p></div>
+</section>
+<section class="stats"><div class="wrap stat-row">
+  <div><b>3</b><span>Vùng miền</span></div>
+  <div><b id="st-tours">25</b><span>Điểm đến</span></div>
+  <div><b>[số]</b><span>[Nhãn]</span></div>
+</div></section>
+<section class="wrap sec"><h2 class="sec-title">Đội ngũ thực hiện</h2>
+  <div class="team">
+    <div class="member"><div class="avatar"></div><h3>[Họ tên]</h3><p>[Vai trò]</p></div>
+    <div class="member"><div class="avatar"></div><h3>[Họ tên]</h3><p>[Vai trò]</p></div>
+    <div class="member"><div class="avatar"></div><h3>[Họ tên]</h3><p>[Vai trò]</p></div>
+    <div class="member"><div class="avatar"></div><h3>[Họ tên]</h3><p>[Vai trò]</p></div>
+    <div class="member"><div class="avatar"></div><h3>[Họ tên]</h3><p>[Vai trò]</p></div>
+  </div></section>
+</main><footer id="site-footer"></footer><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script><script src="js/main.js"></script></body></html>
