@@ -1,0 +1,24 @@
+<!DOCTYPE html><html lang="vi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Trang chủ · Việt Hành</title><link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"><link rel="stylesheet" href="css/style.css"><link rel="stylesheet" href="css/responsive.css"></head><body><header id="site-header"></header><main>
+<section class="hero" id="hero">
+  <div class="slide on s1"></div><div class="slide s2"></div><div class="slide s3"></div>
+  <div class="hero-txt wrap">
+    <h1>Mỗi chuyến đi là một câu chuyện</h1>
+    <p>[Slogan ngắn của website]</p>
+    <a class="btn btn-cta" href="products.html">Khám phá ngay</a>
+  </div>
+  <svg class="wave" viewBox="0 0 1440 80" preserveAspectRatio="none"><path d="M0 40 C240 90 480 0 720 40 S1200 80 1440 30 V80 H0Z" fill="#ffffff"/></svg>
+</section>
+<section class="wrap sec">
+  <h2 class="sec-title">Điểm đến nổi bật</h2>
+  <div class="grid" id="featured"></div>
+  <p class="center"><a class="btn btn-line" href="products.html">Xem tất cả điểm đến</a></p>
+</section>
+<section class="exp"><div class="wrap sec">
+  <h2 class="sec-title">Trải nghiệm đặc sắc</h2>
+  <div class="exp-grid">
+    <div class="exp-item"><h3>Cảnh quan thiên nhiên</h3><p>[Nội dung]</p></div>
+    <div class="exp-item"><h3>Ẩm thực đặc sản</h3><p>[Nội dung]</p></div>
+    <div class="exp-item"><h3>Văn hoá bản địa</h3><p>[Nội dung]</p></div>
+    <div class="exp-item"><h3>Gợi ý lịch trình</h3><p>[Nội dung]</p></div>
+  </div></div></section>
+</main><footer id="site-footer"></footer><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script><script src="js/main.js"></script></body></html>
