@@ -1,0 +1,188 @@
+/* ===== KEYS (localStorage) =====
+   tours_data     : danh sách điểm đến (>= 25)
+   users_data     : tài khoản đã đăng ký
+   current_user   : tài khoản đang đăng nhập
+   feedbacks_data : danh sách góp ý / liên hệ
+================================= */
+const SITE_NAME = "Việt Hành";            // TODO: đổi tên website
+const PLACEHOLDER = "[Mô tả điểm đến]";   // TODO: điền mô tả từng địa điểm
+
+// [tên, vùng miền, loại hình] -> ảnh: images/product-01.jpg ... product-25.jpg
+const SEED = [
+  ["Hà Nội","Miền Bắc","Văn hoá"],["Hạ Long","Miền Bắc","Biển đảo"],["Sa Pa","Miền Bắc","Núi"],
+  ["Ninh Bình","Miền Bắc","Thiên nhiên"],["Hà Giang","Miền Bắc","Núi"],["Mộc Châu","Miền Bắc","Núi"],
+  ["Cát Bà","Miền Bắc","Biển đảo"],["Điện Biên","Miền Bắc","Lịch sử"],["Cao Bằng","Miền Bắc","Thiên nhiên"],
+  ["Huế","Miền Trung","Văn hoá"],["Đà Nẵng","Miền Trung","Biển đảo"],["Hội An","Miền Trung","Văn hoá"],
+  ["Phong Nha","Miền Trung","Thiên nhiên"],["Quy Nhơn","Miền Trung","Biển đảo"],["Nha Trang","Miền Trung","Biển đảo"],
+  ["Phú Yên","Miền Trung","Biển đảo"],["Đà Lạt","Miền Trung","Núi"],["Buôn Ma Thuột","Miền Trung","Văn hoá"],
+  ["TP. Hồ Chí Minh","Miền Nam","Văn hoá"],["Phú Quốc","Miền Nam","Biển đảo"],["Cần Thơ","Miền Nam","Sông nước"],
+  ["Côn Đảo","Miền Nam","Biển đảo"],["Cà Mau","Miền Nam","Thiên nhiên"],["Vũng Tàu","Miền Nam","Biển đảo"],
+  ["Bến Tre","Miền Nam","Sông nước"]
+].map((t, i) => ({
+  id: i + 1, name: t[0], region: t[1], type: t[2],
+  img: "images/product-" + String(i + 1).padStart(2, "0") + ".jpg",
+  desc: PLACEHOLDER, extra: "[Điểm check-in / món ngon]"
+}));
+
+/* ---------- storage helpers ---------- */
+const store = {
+  get(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch (e) { return d; } },
+  set(k, v) { localStorage.setItem(k, JSON.stringify(v)); }
+};
+if (!store.get("tours_data")) store.set("tours_data", SEED);
+const tours = () => store.get("tours_data", []);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+/* ---------- navbar + footer ---------- */
+function renderChrome() {
+  const page = location.pathname.split("/").pop() || "index.html";
+  const links = [["index.html", "Trang chủ"], ["about.html", "Giới thiệu"], ["products.html", "Điểm đến"], ["contact.html", "Liên hệ & Tài khoản"]];
+  const u = store.get("current_user", null);
+  const userHtml = u
+    ? `<span>Xin chào, ${esc(u.display)}</span><button class="btn btn-line" id="logout">Đăng xuất</button>`
+    : `<a class="btn btn-line" href="contact.html#login">Đăng nhập</a><a class="btn btn-cta" href="contact.html#register">Đăng ký</a>`;
+  $("#site-header").html(`<div class="wrap nav" id="nav">
+    <a class="logo" href="index.html"><i></i>${SITE_NAME}</a>
+    <button class="burger" id="burger" aria-label="Mở menu">&#9776;</button>
+    <nav class="menu">${links.map(l => `<a href="${l[0]}" class="${l[0] === page ? "on" : ""}">${l[1]}</a>`).join("")}</nav>
+    <div class="user">${userHtml}</div></div>`);
+  $("#site-footer").html(`<div class="wrap"><div class="f-grid">
+    <div><h4>${SITE_NAME}</h4><p>[Giới thiệu ngắn về website]</p></div>
+    <div><h4>Liên kết nhanh</h4><ul>${links.map(l => `<li><a href="${l[0]}">${l[1]}</a></li>`).join("")}</ul></div>
+    <div><h4>Liên hệ</h4><p>[Địa chỉ]<br>[Email] · [Số điện thoại]</p></div></div>
+    <p class="copy">&copy; 2026 ${SITE_NAME}. [Thông tin nhóm / môn học]</p></div>`);
+  $("#burger").on("click", () => $("#nav").toggleClass("open"));
+  $("#logout").on("click", () => { localStorage.removeItem("current_user"); location.reload(); });
+}
+
+/* ---------- cards ---------- */
+function card(t, canDelete) {
+  return `<article class="card" data-id="${t.id}">
+    <div class="thumb"><span class="badge">${esc(t.region)}</span>
+      <img src="${esc(t.img)}" alt="${esc(t.name)}" loading="lazy" onerror="this.remove()"></div>
+    <div class="card-b"><h3>${esc(t.name)}</h3><p>${esc(t.desc)}</p>
+      <div class="acts"><button class="btn btn-line js-detail">Xem chi tiết</button>
+      ${canDelete ? '<button class="btn btn-del js-del">Xóa</button>' : ""}</div></div></article>`;
+}
+
+/* ---------- hero carousel ---------- */
+function initHero() {
+  const s = $("#hero .slide"); if (!s.length) return;
+  let i = 0;
+  setInterval(() => { s.eq(i).removeClass("on"); i = (i + 1) % s.length; s.eq(i).addClass("on"); }, 5000);
+  $("#featured").html(tours().slice(0, 6).map(t => card(t, false)).join(""));
+  $("#featured").on("click", ".js-detail", () => location.href = "products.html");
+}
+
+/* ---------- products page ---------- */
+function initProducts() {
+  if (!$("#list").length) return;
+  let region = "";
+  const types = [...new Set(tours().map(t => t.type).filter(Boolean))];
+  const fillTypes = () => { const cur = $("#type").val(); $("#type").html('<option value="">Tất cả loại hình</option>' + [...new Set(tours().map(t => t.type).filter(Boolean))].map(t => `<option>${esc(t)}</option>`).join("")).val(cur); };
+  fillTypes();
+
+  function render() {
+    $("#list").html(tours().map(t => card(t, true)).join(""));
+    filter();
+  }
+  function filter() {
+    const q = $("#q").val().trim().toLowerCase(), ty = $("#type").val();
+    let n = 0;
+    $("#list .card").each(function () {
+      const t = tours().find(x => x.id == $(this).data("id")); if (!t) return;
+      const ok = (!region || t.region === region) && (!ty || t.type === ty) &&
+        (!q || (t.name + " " + t.desc).toLowerCase().includes(q));
+      ok ? n++ : null;
+      ok ? $(this).stop(true).fadeIn(250) : $(this).stop(true).fadeOut(200);
+    });
+    $("#count").text(n + " điểm đến");
+    $("#empty").prop("hidden", n > 0);
+  }
+
+  $("#q").on("input", filter); $("#type").on("change", filter);
+  $("#chips").on("click", ".chip", function () {
+    $(".chip").removeClass("on"); $(this).addClass("on"); region = $(this).data("region"); filter();
+  });
+
+  $("#list").on("click", ".js-detail", function () {
+    const t = tours().find(x => x.id == $(this).closest(".card").data("id"));
+    $("#d-img").html(`<img src="${esc(t.img)}" alt="" onerror="this.remove()">`);
+    $("#d-region").text(t.region); $("#d-name").text(t.name);
+    $("#d-desc").text(t.desc); $("#d-extra").text(t.extra || "—");
+    $("#m-detail").prop("hidden", false);
+  });
+  $("#list").on("click", ".js-del", function () {
+    const id = $(this).closest(".card").data("id");
+    if (!confirm("Xóa điểm đến này?")) return;
+    store.set("tours_data", tours().filter(t => t.id != id)); render(); fillTypes();
+  });
+
+  $("#btn-add").on("click", () => $("#m-add").prop("hidden", false));
+  $("[data-close]").on("click", function () { $(this).closest(".modal").prop("hidden", true); });
+  $(".modal").on("click", function (e) { if (e.target === this) $(this).prop("hidden", true); });
+  $(document).on("keydown", e => { if (e.key === "Escape") $(".modal").prop("hidden", true); });
+
+  $("#f-add").on("submit", function (e) {
+    e.preventDefault();
+    const f = Object.fromEntries(new FormData(this));
+    const list = tours();
+    list.push({ id: Date.now(), name: f.name, region: f.region, type: f.type || "Khác", img: f.img, desc: f.desc, extra: "" });
+    store.set("tours_data", list); this.reset(); $("#m-add").prop("hidden", true); render(); fillTypes();
+  });
+  render();
+}
+
+/* ---------- about stats ---------- */
+function initAbout() { $("#st-tours").text(tours().length); }
+
+/* ---------- contact: feedback + account ---------- */
+function note(sel, msg, err) { $(sel).text(msg).toggleClass("err", !!err).prop("hidden", false); }
+
+function initContact() {
+  if (!$("#f-fb").length) return;
+  const u = store.get("current_user", null);
+  if (u) { $("#f-fb [name=name]").val(u.display); if (u.user.includes("@")) $("#f-fb [name=email]").val(u.user); }
+
+  $("#f-fb").on("submit", function (e) {
+    e.preventDefault();
+    const f = Object.fromEntries(new FormData(this));
+    const list = store.get("feedbacks_data", []);
+    list.push({ ...f, time: new Date().toISOString() });
+    store.set("feedbacks_data", list); this.reset();
+    note("#fb-msg", "Đã gửi góp ý. Cảm ơn bạn!");
+  });
+
+  function showTab(id) { $(".tab").removeClass("on").filter(`[data-tab=${id}]`).addClass("on"); $(".pane").removeClass("on"); $("#" + id).addClass("on"); $("#acc-msg").prop("hidden", true); }
+  $(".tab").on("click", function () { showTab($(this).data("tab")); });
+  if (location.hash === "#login") showTab("t-login");
+
+  $("#t-reg").on("submit", function (e) {
+    e.preventDefault();
+    const f = Object.fromEntries(new FormData(this)), users = store.get("users_data", []);
+    if (f.pw !== f.pw2) return note("#acc-msg", "Mật khẩu xác nhận chưa khớp.", true);
+    if (users.some(x => x.user === f.user)) return note("#acc-msg", "Tên đăng nhập đã tồn tại.", true);
+    users.push({ display: f.display, user: f.user, pw: f.pw }); // demo: chưa mã hoá
+    store.set("users_data", users); this.reset(); showTab("t-login");
+    note("#acc-msg", "Đăng ký thành công. Hãy đăng nhập.");
+  });
+  $("#t-login").on("submit", function (e) {
+    e.preventDefault();
+    const f = Object.fromEntries(new FormData(this));
+    const u = store.get("users_data", []).find(x => x.user === f.user && x.pw === f.pw);
+    if (!u) return note("#acc-msg", "Sai tài khoản hoặc mật khẩu.", true);
+    store.set("current_user", u); location.reload();
+  });
+  $("#t-pw").on("submit", function (e) {
+    e.preventDefault();
+    const f = Object.fromEntries(new FormData(this)), cur = store.get("current_user", null);
+    if (!cur) return note("#acc-msg", "Hãy đăng nhập trước khi đổi mật khẩu.", true);
+    if (f.old !== cur.pw) return note("#acc-msg", "Mật khẩu hiện tại không đúng.", true);
+    if (f.pw !== f.pw2) return note("#acc-msg", "Mật khẩu mới chưa khớp.", true);
+    cur.pw = f.pw; store.set("current_user", cur);
+    store.set("users_data", store.get("users_data", []).map(x => x.user === cur.user ? cur : x));
+    this.reset(); note("#acc-msg", "Đã cập nhật mật khẩu.");
+  });
+}
+
+$(function () { renderChrome(); initHero(); initProducts(); initAbout(); initContact(); });
